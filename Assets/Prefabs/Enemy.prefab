@@ -414,6 +414,7 @@ GameObject:
   - component: {fileID: 6807609155540812469}
   - component: {fileID: 5088749844128752079}
   - component: {fileID: 1121743947420673984}
+  - component: {fileID: 9150464133999750924}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -509,7 +510,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   waypoints: []
-  speed: 2
 --- !u!114 &1121743947420673984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,6 +523,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   maxHP: 100
+--- !u!114 &9150464133999750924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7882009335234015765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feacbe3112f2a4e4295c898b0bcfafc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  data: {fileID: 11400000, guid: f3488b0ab400b1b4e81e67656e9b144d, type: 2}
+  currentHP: 0
+  speed: 0
 --- !u!1 &8836835889764874734
 GameObject:
   m_ObjectHideFlags: 0

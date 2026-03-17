@@ -3,9 +3,15 @@
 public class EnemyMovement : MonoBehaviour
 {
     public Transform[] waypoints;
-    public float speed = 2f;
 
-    int waypointIndex = 0;
+    private int waypointIndex = 0;
+
+    private Enemy enemy;
+
+    void Start()
+    {
+        enemy = GetComponent<Enemy>();
+    }
 
     void Update()
     {
@@ -20,10 +26,12 @@ public class EnemyMovement : MonoBehaviour
         transform.position = Vector3.MoveTowards(
             transform.position,
             target.position,
-            speed * Time.deltaTime
+            enemy.speed * Time.deltaTime
         );
 
-        if (Vector3.Distance(transform.position, target.position) < 0.1f)
+        float distance = Vector3.Distance(transform.position, target.position);
+
+        if (distance < 0.1f)
         {
             waypointIndex++;
         }
