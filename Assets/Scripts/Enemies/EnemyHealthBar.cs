@@ -3,11 +3,12 @@ using UnityEngine.UI;
 
 public class EnemyHealthBar : MonoBehaviour
 {
-    public EnemyHealth enemy;
+    public Enemy enemy;
     public Slider slider;
 
     void Update()
     {
-        slider.value = enemy.GetHealthPercent();
+        if (enemy != null)
+            slider.value = enemy.GetHealthPercent();
     }
 }

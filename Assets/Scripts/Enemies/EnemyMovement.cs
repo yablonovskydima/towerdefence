@@ -5,7 +5,6 @@ public class EnemyMovement : MonoBehaviour
     public Transform[] waypoints;
 
     private int waypointIndex = 0;
-
     private Enemy enemy;
 
     void Start()
@@ -26,12 +25,12 @@ public class EnemyMovement : MonoBehaviour
         transform.position = Vector3.MoveTowards(
             transform.position,
             target.position,
-            enemy.speed * Time.deltaTime
+            enemy.getCurrentSpeed() * Time.deltaTime
         );
 
         float distance = Vector3.Distance(transform.position, target.position);
 
-        if (distance < 0.1f)
+        if (distance < 0.05f)
         {
             waypointIndex++;
         }

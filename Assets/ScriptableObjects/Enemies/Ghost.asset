@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Ghost
   maxHP: 100
-  speed: 5
+  speed: 0.5
   cost: 20
   ignoreFreezer: 1
