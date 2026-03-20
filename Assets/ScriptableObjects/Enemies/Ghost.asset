@@ -17,3 +17,4 @@ MonoBehaviour:
   speed: 0.5
   cost: 20
   ignoreFreezer: 1
+  damage: 20

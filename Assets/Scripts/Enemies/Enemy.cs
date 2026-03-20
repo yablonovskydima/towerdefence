@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
     private float baseSpeed;
     private float currentSpeed;
 
+    public System.Action OnDeath;
+
     private Coroutine slowCoroutine;
 
     void Start()
@@ -44,6 +46,10 @@ public class Enemy : MonoBehaviour
 
     public void ApplySlow(float percent, float duration)
     {
+
+        if (data.ignoreFreezer)
+            return;
+
         if (slowCoroutine != null)
             StopCoroutine(slowCoroutine);
 
@@ -71,6 +77,13 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        OnDeath?.Invoke();
+        Destroy(gameObject);
+    }
+
+    public void ReachBase()
+    {
+        OnDeath?.Invoke();
         Destroy(gameObject);
     }
 }

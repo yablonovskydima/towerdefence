@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   towerName: Cannon
   cost: 200
-  range: 50
+  range: 5
   fireRate: 0.3
   damage: 55
   attackType: 0

@@ -11,4 +11,5 @@ public class EnemyData : ScriptableObject
     public int cost;
 
     public bool ignoreFreezer;
+    public int damage = 1;
 }

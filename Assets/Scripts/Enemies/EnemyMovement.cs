@@ -39,12 +39,12 @@ public class EnemyMovement : MonoBehaviour
     void ReachBase()
     {
         BaseHealth baseHealth = FindObjectOfType<BaseHealth>();
-
+        Enemy enemy = GetComponent<Enemy>();
         if (baseHealth != null)
         {
-            baseHealth.TakeDamage(1);
+            baseHealth.TakeDamage(enemy.data.damage);
         }
-
-        Destroy(gameObject);
+        
+        enemy?.ReachBase();
     }
 }
