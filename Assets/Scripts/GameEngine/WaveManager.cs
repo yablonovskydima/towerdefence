@@ -21,6 +21,7 @@ public class WaveManager : MonoBehaviour
 
     public void StartWave()
     {
+        GameManager.Instance.currentWave++;
         spawned = 0;
         aliveEnemies = 0;
         StartCoroutine(SpawnWave());

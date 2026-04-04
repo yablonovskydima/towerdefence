@@ -43,12 +43,18 @@ public class UIManager : MonoBehaviour
     {
         HideAll();
         battleUI.SetActive(true);
+
+        BattleUI battle = battleUI.GetComponent<BattleUI>();
+        battle.UpdateWave(GameManager.Instance.currentWave);
     }
 
-    public void ShowRoundEnd()
+    public void ShowRoundEnd(int goldEarned = 0)
     {
         HideAll();
         roundEndUI.SetActive(true);
+
+        RoundEndUI roundEnd = roundEndUI.GetComponent<RoundEndUI>();
+        roundEnd.Setup(goldEarned);
     }
 
     public void ShowGameOver()

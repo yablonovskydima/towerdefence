@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-
+    public int currentWave = 1;
     public GameState currentState;
 
     void Awake()
@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Preparation:
+                int earned = EconomyManager.Instance.BattleGold;
+                EconomyManager.Instance.InitBudget(earned > 0 ? earned : -1);
                 UIManager.Instance.ShowPreparation();
                 break;
 
@@ -38,7 +40,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.RoundEnd:
-                UIManager.Instance.ShowRoundEnd();
+                UIManager.Instance.ShowRoundEnd(EconomyManager.Instance.BattleGold);
                 break;
 
             case GameState.GameOver:

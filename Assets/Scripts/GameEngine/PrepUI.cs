@@ -2,6 +2,7 @@
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
+using TMPro;
 
 public class PrepUI : MonoBehaviour
 {
@@ -15,7 +16,27 @@ public class PrepUI : MonoBehaviour
     public Tilemap groundTilemap;
     public Tilemap pathTilemap;
 
+    [Header("UI")]
+    public TextMeshProUGUI goldText;
+
     private TowerData selectedTowerData;
+
+    void Start()
+    {
+        EconomyManager.Instance.OnPrepGoldChanged += UpdateGoldText;
+    }
+
+    void OnEnable()
+    {
+        if (EconomyManager.Instance == null) return;
+        UpdateGoldText(EconomyManager.Instance.PrepGold);
+    }
+
+
+    void UpdateGoldText(int amount)
+    {
+        goldText.text = amount + " G";
+    }
 
     void Update()
     {
@@ -28,13 +49,16 @@ public class PrepUI : MonoBehaviour
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
             mousePos.z = 0;
 
-            //if (!CanPlaceTower(mousePos))
-            //    return;
-
             Vector3 snappedPos = groundTilemap.GetCellCenterWorld(
                 groundTilemap.WorldToCell(mousePos)
             );
             snappedPos.z = 0;
+
+            if (!EconomyManager.Instance.SpendGold(selectedTowerData.cost))
+            {
+                Debug.Log("Не вистачає золота!");
+                return;
+            }
 
             GameObject tower = Instantiate(towerPrefab, snappedPos, Quaternion.identity);
             tower.GetComponent<Tower>().data = selectedTowerData;
@@ -51,10 +75,16 @@ public class PrepUI : MonoBehaviour
 
             Collider2D hit = Physics2D.OverlapPoint(mousePos);
             if (hit != null && hit.CompareTag("Tower"))
+            {
+                Tower tower = hit.GetComponent<Tower>();
+                if (tower != null)
+                    EconomyManager.Instance.RefundGold(tower.data.cost / 2);
                 Destroy(hit.gameObject);
+            }
         }
     }
     //TODO перевірка на ту саму тайлу
+
 
     //bool CanPlaceTower(Vector3 worldPos)
     //{

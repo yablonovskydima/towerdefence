@@ -12,4 +12,5 @@ public class EnemyData : ScriptableObject
 
     public bool ignoreFreezer;
     public int damage = 1;
+    public int goldReward = 20;
 }

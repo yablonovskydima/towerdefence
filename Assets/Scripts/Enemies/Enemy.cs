@@ -77,6 +77,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        EconomyManager.Instance.AddBattleGold(data.goldReward);
         OnDeath?.Invoke();
         Destroy(gameObject);
     }
