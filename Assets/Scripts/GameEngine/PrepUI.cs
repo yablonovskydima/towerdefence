@@ -29,12 +29,19 @@ public class PrepUI : MonoBehaviour
     void OnEnable()
     {
         if (EconomyManager.Instance == null) return;
+        EconomyManager.Instance.OnPrepGoldChanged += UpdateGoldText;
         UpdateGoldText(EconomyManager.Instance.PrepGold);
     }
 
+    void OnDisable()
+    {
+        if (EconomyManager.Instance == null) return;
+        EconomyManager.Instance.OnPrepGoldChanged -= UpdateGoldText;
+    }
 
     void UpdateGoldText(int amount)
     {
+        if (goldText == null) return;
         goldText.text = amount + " G";
     }
 
@@ -49,14 +56,17 @@ public class PrepUI : MonoBehaviour
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
             mousePos.z = 0;
 
-            Vector3 snappedPos = groundTilemap.GetCellCenterWorld(
-                groundTilemap.WorldToCell(mousePos)
-            );
+            Vector3 snappedPos = groundTilemap.GetCellCenterWorld(groundTilemap.WorldToCell(mousePos));
             snappedPos.z = 0;
 
+            if (!CanPlaceTower(mousePos))
+            {
+                Debug.Log("Cannot place tower here!");
+                return;
+            }
             if (!EconomyManager.Instance.SpendGold(selectedTowerData.cost))
             {
-                Debug.Log("Не вистачає золота!");
+                Debug.Log("Not enough gold!");
                 return;
             }
 
@@ -83,28 +93,38 @@ public class PrepUI : MonoBehaviour
             }
         }
     }
-    //TODO перевірка на ту саму тайлу
 
+    bool CanPlaceTower(Vector3 worldPos)
+    {
+        Vector3Int cellPos = groundTilemap.WorldToCell(worldPos);
+        if (!groundTilemap.HasTile(cellPos)) return false;
+        if (pathTilemap.HasTile(cellPos)) return false;
 
-    //bool CanPlaceTower(Vector3 worldPos)
-    //{
-    //    Vector3Int cellPos = groundTilemap.WorldToCell(worldPos);
+        Vector3 snappedPos = groundTilemap.GetCellCenterWorld(cellPos);
+        snappedPos.z = 0;
 
-    //    if (!groundTilemap.HasTile(cellPos)) return false;
-    //    if (pathTilemap.HasTile(cellPos)) return false;
+        Vector2 cellSize = groundTilemap.cellSize * 0.9f;
+        Collider2D existing = Physics2D.OverlapBox(snappedPos, cellSize, 0f);
 
-    //    Vector3 snappedPos = groundTilemap.GetCellCenterWorld(cellPos);
-    //    snappedPos.z = 0;
+        if (existing != null)
+            Debug.Log($"Blocked by: {existing.name} tag:{existing.tag} at {existing.transform.position}");
 
-    //    Collider2D existing = Physics2D.OverlapPoint(snappedPos);
-    //    return existing == null || !existing.CompareTag("Tower");
-    //}
+        return existing == null || !existing.CompareTag("Tower");
+    }
 
     public void OnArcherSelected() => selectedTowerData = archerData;
     public void OnMageSelected() => selectedTowerData = mageData;
     public void OnFreezerSelected() => selectedTowerData = freezerData;
     public void OnCannonSelected() => selectedTowerData = cannonData;
-    public void OnStartBattle() => GameManager.Instance.ChangeState(GameState.Battle);
+    public void OnStartBattle()
+    {
+        if (GameObject.FindGameObjectsWithTag("Tower").Length == 0)
+        {
+            Debug.Log("At least one tower needs to be placed!");
+            return;
+        }
+        GameManager.Instance.ChangeState(GameState.Battle);
+    }
     public void OnBackToMenu() => GameManager.Instance.ChangeState(GameState.Menu);
     public void ClearSelectedTower() => selectedTowerData = null;
 }

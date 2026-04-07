@@ -8,12 +8,14 @@ public class BattleUI : MonoBehaviour
 
     void OnEnable()
     {
+        if (EconomyManager.Instance == null) return;
         EconomyManager.Instance.OnBattleGoldChanged += UpdateGold;
         UpdateGold(EconomyManager.Instance.BattleGold);
     }
 
     void OnDisable()
     {
+        if (EconomyManager.Instance == null) return;
         EconomyManager.Instance.OnBattleGoldChanged -= UpdateGold;
     }
 

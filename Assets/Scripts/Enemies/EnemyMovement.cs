@@ -6,6 +6,7 @@ public class EnemyMovement : MonoBehaviour
 
     private int waypointIndex = 0;
     private Enemy enemy;
+    private bool reachedBase = false;
 
     void Start()
     {
@@ -14,6 +15,8 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
+        if (reachedBase) return;
+
         if (waypointIndex >= waypoints.Length)
         {
             ReachBase();
@@ -38,13 +41,8 @@ public class EnemyMovement : MonoBehaviour
 
     void ReachBase()
     {
-        BaseHealth baseHealth = FindObjectOfType<BaseHealth>();
-        Enemy enemy = GetComponent<Enemy>();
-        if (baseHealth != null)
-        {
-            baseHealth.TakeDamage(enemy.data.damage);
-        }
-        
+        reachedBase = true;
+        BaseHealth.Instance.TakeDamage(enemy.data.damage);
         enemy?.ReachBase();
     }
 }
