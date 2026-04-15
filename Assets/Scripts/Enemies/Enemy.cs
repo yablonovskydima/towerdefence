@@ -9,29 +9,34 @@ public class Enemy : MonoBehaviour
 
     private float baseSpeed;
     private float currentSpeed;
-
     public System.Action OnDeath;
-
     private Coroutine slowCoroutine;
+    private Animator animator;
 
-    void Start()
+    void Awake()
     {
+        animator = GetComponent<Animator>();
         currentHP = data.maxHP;
-
         baseSpeed = data.speed;
         currentSpeed = baseSpeed;
+    }
+
+    public void Initialize()
+    {
+        currentHP = data.maxHP;
+        baseSpeed = data.speed;
+        currentSpeed = baseSpeed;
+
+        if (data.animatorController != null)
+            animator.runtimeAnimatorController = data.animatorController;
+
+        if (data.sprite != null)
+            GetComponent<SpriteRenderer>().sprite = data.sprite;
     }
 
     void Update()
     {
 
-    }
-
-    void Awake()
-    {
-        currentHP = data.maxHP;
-        baseSpeed = data.speed;
-        currentSpeed = baseSpeed;
     }
 
     public void TakeDamage(float damage)

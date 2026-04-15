@@ -13,6 +13,16 @@ public class TowerData : ScriptableObject
     public AttackType attackType;
 
     public GameObject projectilePrefab;
+
+    [Header("Visuals")]
+    public Sprite idleSprite;
+    public Sprite shootSprite;
+    public float shootSpriteDuration = 0.1f;
+
+    [Header("Projectile Visuals")]
+    public Sprite projectileFlySprite;
+    public Sprite projectileHitSprite;
+    public float projectileHitDuration = 0.1f;
 }
 
 public enum AttackType

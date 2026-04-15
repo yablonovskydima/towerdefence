@@ -19,3 +19,9 @@ MonoBehaviour:
   damage: 45
   attackType: 1
   projectilePrefab: {fileID: 5252135390510962783, guid: 0b9dfae46b61084419583012da8492d6, type: 3}
+  idleSprite: {fileID: 2971653748508199937, guid: 4589ab535a9e83243849315b94841741, type: 3}
+  shootSprite: {fileID: 9128532667864627769, guid: 315327e36beb2d74c9cce3f573c583dc, type: 3}
+  shootSpriteDuration: 0.1
+  projectileFlySprite: {fileID: 3185482500052582793, guid: ef4e5bf6692f08145a3768b6f2f92dc1, type: 3}
+  projectileHitSprite: {fileID: 1739125537042336435, guid: a2d5224894c3bc841ad27a87d000ca3d, type: 3}
+  projectileHitDuration: 0.1

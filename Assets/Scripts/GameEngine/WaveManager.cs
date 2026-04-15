@@ -91,6 +91,7 @@ public class WaveManager : MonoBehaviour
         GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
         Enemy enemyScript = enemy.GetComponent<Enemy>();
         enemyScript.data = data;
+        enemyScript.Initialize();
         enemyScript.OnDeath += OnEnemyDeath;
         enemy.GetComponent<EnemyMovement>().waypoints = waypoints;
         _spawned++;
