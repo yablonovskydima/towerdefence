@@ -21,12 +21,16 @@ public class Projectile : MonoBehaviour
     void Update()
     {
         if (hasHit) return;
-
         if (target == null)
         {
             Destroy(gameObject);
             return;
         }
+
+        Vector2 direction = (target.transform.position - transform.position).normalized;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
         transform.position = Vector2.MoveTowards(
             transform.position,
@@ -61,11 +65,24 @@ public class Projectile : MonoBehaviour
         if (data.projectileHitSprite != null && sr != null)
         {
             sr.sprite = data.projectileHitSprite;
-            Destroy(gameObject, data.projectileHitDuration);
+            StartCoroutine(ReturnAfterDelay(data.projectileHitDuration));
         }
         else
         {
-            Destroy(gameObject);
+            ReturnToPool();
         }
+    }
+
+    System.Collections.IEnumerator ReturnAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ReturnToPool();
+    }
+
+    void ReturnToPool()
+    {
+        hasHit = false;
+        sr.sprite = null;
+        ObjectPoolManager.Instance.ReturnProjectile(gameObject);
     }
 }

@@ -61,7 +61,7 @@ public class Tower : MonoBehaviour
 
     void Shoot(Enemy target)
     {
-        GameObject proj = Instantiate(data.projectilePrefab, firePoint.position, Quaternion.identity);
+        GameObject proj = ObjectPoolManager.Instance.GetProjectile(firePoint.position);
         proj.GetComponent<Projectile>().Init(target, data);
 
         if (data.shootSprite != null)

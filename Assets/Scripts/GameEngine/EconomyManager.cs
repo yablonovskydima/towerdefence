@@ -24,6 +24,7 @@ public class EconomyManager : MonoBehaviour
         _prepGold = amount < 0 ? startingGold : amount;
         _battleGold = 0;
         OnPrepGoldChanged?.Invoke(_prepGold);
+        OnBattleGoldChanged?.Invoke(_battleGold);
     }
 
     public bool SpendGold(int amount)

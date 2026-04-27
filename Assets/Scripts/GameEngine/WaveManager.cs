@@ -88,22 +88,36 @@ public class WaveManager : MonoBehaviour
 
     void SpawnEnemy(EnemyData data)
     {
-        GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+        GameObject enemy = ObjectPoolManager.Instance.GetEnemy(spawnPoint.position);
         Enemy enemyScript = enemy.GetComponent<Enemy>();
+        EnemyMovement movement = enemy.GetComponent<EnemyMovement>();
+
         enemyScript.data = data;
-        enemyScript.Initialize();
-        enemyScript.OnDeath += OnEnemyDeath;
-        enemy.GetComponent<EnemyMovement>().waypoints = waypoints;
+        enemyScript.Initialize();       // скидає OnDeath = null
         _spawned++;
-        _aliveEnemies++;
+        _aliveEnemies++;                // інкремент ДО підписки
+        enemyScript.OnDeath += OnEnemyDeath;
+        movement.waypoints = waypoints;
     }
+
 
     void OnEnemyDeath()
     {
-        _aliveEnemies--;
+        _aliveEnemies = Mathf.Max(0, _aliveEnemies - 1);
         if (_spawned >= _waveEnemies.Count && _aliveEnemies <= 0)
         {
             GameManager.Instance.ChangeState(GameState.RoundEnd);
         }
+    }
+
+    public void CleanupEnemies()
+    {
+        Enemy[] active = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+        foreach (var e in active)
+        {
+            e.OnDeath = null;  // не рахуємо як смерть
+            ObjectPoolManager.Instance.ReturnEnemy(e.gameObject);
+        }
+        _aliveEnemies = 0;
     }
 }
