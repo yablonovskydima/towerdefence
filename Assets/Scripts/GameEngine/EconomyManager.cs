@@ -46,4 +46,11 @@ public class EconomyManager : MonoBehaviour
         _prepGold += amount;
         OnPrepGoldChanged?.Invoke(_prepGold);
     }
+
+    public int TakePrepRemainder()
+    {
+        int remainder = _prepGold;
+        _prepGold = 0;
+        return remainder;
+    }
 }

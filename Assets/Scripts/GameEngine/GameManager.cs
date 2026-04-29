@@ -5,7 +5,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public int currentWave = 0;
     public GameState currentState;
-    private int _earnedGold = 0;  // ← додай це поле
+    private int _earnedGold = 0;
+    private int _prepRemainder = 0;  // ← ДОДАТИ ЦЕ ПОЛЕ
+
     [Header("Settings")]
     public int baseHP = 100;
 
@@ -15,7 +17,6 @@ public class GameManager : MonoBehaviour
     public void ChangeState(GameState newState)
     {
         currentState = newState;
-        Debug.Log("STATE: " + newState);
         switch (newState)
         {
             case GameState.Menu:
@@ -23,22 +24,25 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Preparation:
-                Debug.Log($"Preparation: earnedGold = {_earnedGold}, BattleGold = {EconomyManager.Instance.BattleGold}");
-                EconomyManager.Instance.InitBudget(_earnedGold > 0 ? _earnedGold : -1);
+                // Загальний бюджет = залишок підготовки + зароблене в бою
+                int totalGold = _prepRemainder + _earnedGold;
+                EconomyManager.Instance.InitBudget(totalGold > 0 ? totalGold : -1);
                 _earnedGold = 0;
+                _prepRemainder = 0;
                 UIManager.Instance.ShowPreparation();
                 break;
 
             case GameState.Battle:
+                // ← ЗБЕРІГАЄМО ЗАЛИШОК ПЕРЕД ПОЧАТКОМ БОЮ
+                _prepRemainder = EconomyManager.Instance.TakePrepRemainder();
                 currentWave++;
                 UIManager.Instance.ShowBattle();
                 WaveManager.Instance.StartWave();
                 break;
 
             case GameState.RoundEnd:
-                WaveManager.Instance.CleanupEnemies();  // ← спочатку прибираємо ворогів
-                _earnedGold = EconomyManager.Instance.BattleGold;  // ← тепер берємо фінальне золото
-                Debug.Log($"RoundEnd: saving earnedGold = {_earnedGold}");
+                WaveManager.Instance.CleanupEnemies();
+                _earnedGold = EconomyManager.Instance.BattleGold;
                 UIManager.Instance.ShowRoundEnd(_earnedGold);
                 break;
 
@@ -52,6 +56,7 @@ public class GameManager : MonoBehaviour
     {
         currentWave = 0;
         _earnedGold = 0;
+        _prepRemainder = 0;  // ← СКИДАТИ І ЦЕ
         BaseHealth.Instance.ResetHP();
         foreach (GameObject tower in GameObject.FindGameObjectsWithTag("Tower"))
             Destroy(tower);
