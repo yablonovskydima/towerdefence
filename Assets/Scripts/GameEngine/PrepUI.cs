@@ -125,6 +125,18 @@ public class PrepUI : MonoBehaviour
         }
         GameManager.Instance.ChangeState(GameState.Battle);
     }
-    public void OnBackToMenu() => GameManager.Instance.ChangeState(GameState.Menu);
+    public void OnBackToMenu()
+    {
+        GameManager.Instance.TrySaveBestScore();
+
+        GameManager.Instance.currentWave = 0;
+
+        foreach (GameObject tower in GameObject.FindGameObjectsWithTag("Tower"))
+            Destroy(tower);
+
+        EconomyManager.Instance.InitBudget(-1);
+        GameManager.Instance.ChangeState(GameState.Menu);
+    }
+
     public void ClearSelectedTower() => selectedTowerData = null;
 }
