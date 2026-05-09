@@ -14,6 +14,9 @@ public class EnemyData : ScriptableObject
     public int damage = 1;
     public int goldReward = 20;
 
+    [Header("Audio")]
+    public AudioClip deathSound;
+
     [Header("Visuals")]
     public RuntimeAnimatorController animatorController;
     public Sprite sprite;

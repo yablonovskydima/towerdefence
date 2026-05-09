@@ -64,6 +64,12 @@ public class Tower : MonoBehaviour
         GameObject proj = ObjectPoolManager.Instance.GetProjectile(firePoint.position);
         proj.GetComponent<Projectile>().Init(target, data);
 
+        if (data.shootSound != null)
+        {
+            AudioSource.PlayClipAtPoint(data.shootSound, transform.position,
+                Mathf.Clamp(data.shootSoundDuration / data.shootSound.length, 0f, 1f));
+        }
+
         if (data.shootSprite != null)
         {
             sr.sprite = data.shootSprite;

@@ -25,3 +25,5 @@ MonoBehaviour:
   projectileFlySprite: {fileID: -8366845525652012386, guid: 3cdc32babc0dd824cb783904b9ffe884, type: 3}
   projectileHitSprite: {fileID: -8366845525652012386, guid: 3cdc32babc0dd824cb783904b9ffe884, type: 3}
   projectileHitDuration: 0.1
+  shootSound: {fileID: 8300000, guid: e370c2be9987aa741bef0d67bea7c8d5, type: 3}
+  shootSoundDuration: 1

@@ -23,6 +23,10 @@ public class TowerData : ScriptableObject
     public Sprite projectileFlySprite;
     public Sprite projectileHitSprite;
     public float projectileHitDuration = 0.1f;
+
+    [Header("Audio")]
+    public AudioClip shootSound;
+    [Range(0f, 3f)] public float shootSoundDuration = 1f;
 }
 
 public enum AttackType

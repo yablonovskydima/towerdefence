@@ -19,5 +19,6 @@ MonoBehaviour:
   ignoreFreezer: 0
   damage: 5
   goldReward: 20
+  deathSound: {fileID: 8300000, guid: 3f9e05b4463158749b15c6d6f42a6840, type: 3}
   animatorController: {fileID: 9100000, guid: 3893896dd20514b46b940ce5c3019a08, type: 2}
   sprite: {fileID: 21300000, guid: 18c3a96703163de4c88f075569ade9fb, type: 3}

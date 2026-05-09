@@ -65,6 +65,9 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        if (data.deathSound != null)
+            AudioSource.PlayClipAtPoint(data.deathSound, transform.position);
+
         EconomyManager.Instance.AddBattleGold(data.goldReward);
         var cb = OnDeath;
         OnDeath = null;
