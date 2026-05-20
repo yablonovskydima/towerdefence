@@ -2,6 +2,7 @@
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
+using System.Collections;
 using TMPro;
 
 public class PrepUI : MonoBehaviour
@@ -18,12 +19,14 @@ public class PrepUI : MonoBehaviour
 
     [Header("UI")]
     public TextMeshProUGUI goldText;
+    public TextMeshProUGUI errorText;
 
     [Header("Audio")]
     public AudioClip placeTowerSound;
     public AudioClip removeTowerSound;
 
     private TowerData selectedTowerData;
+    private Coroutine errorCoroutine;
 
     void Start()
     {
@@ -65,12 +68,12 @@ public class PrepUI : MonoBehaviour
 
             if (!CanPlaceTower(mousePos))
             {
-                Debug.Log("Cannot place tower here!");
+                ShowError("You cannot place tower here!");
                 return;
             }
             if (!EconomyManager.Instance.SpendGold(selectedTowerData.cost))
             {
-                Debug.Log("Not enough gold!");
+                ShowError("Not enough gold!");
                 return;
             }
 
@@ -103,6 +106,24 @@ public class PrepUI : MonoBehaviour
                 Destroy(hit.gameObject);
             }
         }
+    }
+
+    void ShowError(string message)
+    {
+        if (errorText == null) return;
+    
+        if (errorCoroutine != null)
+            StopCoroutine(errorCoroutine);
+    
+        errorCoroutine = StartCoroutine(ShowErrorRoutine(message));
+    }
+
+    IEnumerator ShowErrorRoutine(string message)
+    {
+        errorText.text = message;
+        errorText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        errorText.gameObject.SetActive(false);
     }
 
     bool CanPlaceTower(Vector3 worldPos)

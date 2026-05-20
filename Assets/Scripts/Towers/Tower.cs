@@ -7,20 +7,44 @@ public class Tower : MonoBehaviour
     private float cooldown;
     private SpriteRenderer sr;
     private float shootSpriteTimer;
+    private SpriteRenderer rangeRenderer;
+
+    [Header("Range Visual")]
+    public float rangeVisualScale = 1f;
 
     void Awake()
     {
-        sr = GetComponentInChildren<SpriteRenderer>();
+       Transform rangeVisual = transform.Find("RangeVisual");
+        if (rangeVisual != null)
+            rangeRenderer = rangeVisual.GetComponent<SpriteRenderer>();
+
+        foreach (SpriteRenderer renderer in GetComponentsInChildren<SpriteRenderer>())
+        {
+            if (renderer.transform != rangeVisual)
+            {
+                sr = renderer;
+                break;
+            }
+        }
     }
 
     void Start()
     {
         if (data.idleSprite != null)
             sr.sprite = data.idleSprite;
+
+        if (rangeRenderer != null)
+        {
+            float scale = data.range * 11.67f;
+            rangeRenderer.transform.localScale = new Vector3(scale, scale, 1f);
+        }
     }
 
     void Update()
     {
+        if (rangeRenderer != null)
+            rangeRenderer.enabled = GameManager.Instance.currentState == GameState.Preparation;
+
         if (shootSpriteTimer > 0f)
         {
             shootSpriteTimer -= Time.deltaTime;
