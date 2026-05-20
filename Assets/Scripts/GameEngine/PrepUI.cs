@@ -30,6 +30,9 @@ public class PrepUI : MonoBehaviour
 
     void Start()
     {
+        if (errorText != null)
+            errorText.gameObject.SetActive(false);
+
         EconomyManager.Instance.OnPrepGoldChanged += UpdateGoldText;
     }
 
@@ -68,7 +71,7 @@ public class PrepUI : MonoBehaviour
 
             if (!CanPlaceTower(mousePos))
             {
-                ShowError("You cannot place tower here!");
+                ShowError("The Tower does not reach the path!");
                 return;
             }
             if (!EconomyManager.Instance.SpendGold(selectedTowerData.cost))
@@ -100,7 +103,7 @@ public class PrepUI : MonoBehaviour
                 if (tower != null)
                     EconomyManager.Instance.RefundGold(tower.data.cost / 2);
 
-                 if (removeTowerSound != null)
+                if (removeTowerSound != null)
                     AudioSource.PlayClipAtPoint(removeTowerSound, hit.transform.position);
 
                 Destroy(hit.gameObject);
@@ -111,10 +114,10 @@ public class PrepUI : MonoBehaviour
     void ShowError(string message)
     {
         if (errorText == null) return;
-    
+
         if (errorCoroutine != null)
             StopCoroutine(errorCoroutine);
-    
+
         errorCoroutine = StartCoroutine(ShowErrorRoutine(message));
     }
 
@@ -137,30 +140,51 @@ public class PrepUI : MonoBehaviour
 
         Vector2 cellSize = groundTilemap.cellSize * 0.9f;
         Collider2D existing = Physics2D.OverlapBox(snappedPos, cellSize, 0f);
+        if (existing != null && existing.CompareTag("Tower")) return false;
 
-        if (existing != null)
-            Debug.Log($"Blocked by: {existing.name} tag:{existing.tag} at {existing.transform.position}");
+        if (!IsPathInRange(snappedPos, selectedTowerData.range)) return false;
 
-        return existing == null || !existing.CompareTag("Tower");
+        return true;
+    }
+
+    bool IsPathInRange(Vector3 worldPos, float range)
+    {
+        Vector3Int center = pathTilemap.WorldToCell(worldPos);
+        int radius = Mathf.CeilToInt(range / groundTilemap.cellSize.x);
+
+        for (int x = -radius; x <= radius; x++)
+        {
+            for (int y = -radius; y <= radius; y++)
+            {
+                Vector3Int checkCell = new Vector3Int(center.x + x, center.y + y, 0);
+                if (!pathTilemap.HasTile(checkCell)) continue;
+
+                Vector3 tileWorld = pathTilemap.GetCellCenterWorld(checkCell);
+                if (Vector2.Distance(worldPos, tileWorld) <= range)
+                    return true;
+            }
+        }
+        return false;
     }
 
     public void OnArcherSelected() => selectedTowerData = archerData;
     public void OnMageSelected() => selectedTowerData = mageData;
     public void OnFreezerSelected() => selectedTowerData = freezerData;
     public void OnCannonSelected() => selectedTowerData = cannonData;
+
     public void OnStartBattle()
     {
         if (GameObject.FindGameObjectsWithTag("Tower").Length == 0)
         {
-            Debug.Log("At least one tower needs to be placed!");
+            ShowError("Place at least one tower!");
             return;
         }
         GameManager.Instance.ChangeState(GameState.Battle);
     }
+
     public void OnBackToMenu()
     {
         GameManager.Instance.TrySaveBestScore();
-
         GameManager.Instance.currentWave = 0;
 
         foreach (GameObject tower in GameObject.FindGameObjectsWithTag("Tower"))
