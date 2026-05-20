@@ -19,6 +19,10 @@ public class PrepUI : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI goldText;
 
+    [Header("Audio")]
+    public AudioClip placeTowerSound;
+    public AudioClip removeTowerSound;
+
     private TowerData selectedTowerData;
 
     void Start()
@@ -72,6 +76,9 @@ public class PrepUI : MonoBehaviour
 
             GameObject tower = Instantiate(towerPrefab, snappedPos, Quaternion.identity);
             tower.GetComponent<Tower>().data = selectedTowerData;
+
+            if (placeTowerSound != null)
+                AudioSource.PlayClipAtPoint(placeTowerSound, snappedPos);
         }
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
@@ -89,6 +96,10 @@ public class PrepUI : MonoBehaviour
                 Tower tower = hit.GetComponent<Tower>();
                 if (tower != null)
                     EconomyManager.Instance.RefundGold(tower.data.cost / 2);
+
+                 if (removeTowerSound != null)
+                    AudioSource.PlayClipAtPoint(removeTowerSound, hit.transform.position);
+
                 Destroy(hit.gameObject);
             }
         }
